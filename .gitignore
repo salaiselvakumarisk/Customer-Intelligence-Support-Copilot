@@ -21,3 +21,12 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Optional Part A visualisation
+visualize_part_a.py
+outputs/part_a_dashboard.html
+dashboard.html
+screenshots/
+*.png
+*.jpg
+*.jpeg
