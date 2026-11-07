@@ -1,213 +1,240 @@
-# Customer Intelligence & Support Copilot
+# Customer Intelligence Support Copilot
 
 ## Overview
 
-This project builds a customer intelligence and support automation system using fictional Swiggy Instamart data.
+An offline, AI-powered customer intelligence and support automation project built using Python, SQL, Pandas, SQLite, Scikit-learn, TF-IDF, and a deterministic mock LLM.
 
-The project covers data quality auditing, data cleaning, customer segmentation, lapse prediction, support ticket triage, policy retrieval, and a guarded refund agent.
+The project demonstrates an end-to-end customer intelligence and support workflow through four major components:
 
-The objective is to transform raw operational data into actionable customer insights and build reliable support automation workflows.
+1. **Customer Data Foundation:** Data cleaning, validation, database creation, and SQL-based analysis.
+2. **Customer Intelligence:** RFM analysis, customer segmentation, and customer lapse prediction.
+3. **Support Ticket Intelligence:** Ticket preprocessing, PII masking, classification, prioritisation, budget management, and routing.
+4. **Policy RAG and Agent Automation:** Policy-based retrieval-augmented generation and a tool-using refund support agent.
+
+The project uses a deterministic mock LLM to simulate hosted LLM behaviour without requiring API keys, internet access, or paid API usage.
+
+### Technology Stack
+
+| Area | Technologies |
+|---|---|
+| Programming | Python |
+| Data Processing | Pandas, NumPy |
+| Database | SQLite |
+| Data Analysis | SQL, Pandas |
+| Machine Learning | Scikit-learn |
+| Text Processing | Regular Expressions |
+| Retrieval | TF-IDF, Cosine Similarity |
+| LLM Simulation | Custom Mock LLM |
+| Testing | Python scripts and evaluation datasets |
+| Version Control | Git and GitHub |
+
+### Project Structure
+
+```text
+Customer-Intelligence-Support-Copilot/
+│
+├── data/
+│   ├── raw/
+│   │   ├── customers.csv
+│   │   ├── orders.csv
+│   │   ├── products.csv
+│   │   ├── tickets.csv
+│   │   ├── policy_eval.csv
+│   │   └── agent_scenarios.csv
+│   ├── clean/
+│   ├── policies/
+│   │   ├── delivery_policy.txt
+│   │   ├── escalation_policy.txt
+│   │   ├── payment_policy.txt
+│   │   ├── privacy_policy.txt
+│   │   └── refund_policy.txt
+│   └── instamart.db
+│
+├── outputs/
+│   ├── tickets_preprocessed.csv
+│   ├── triage_zero_shot.csv
+│   ├── triage_few_shot.csv
+│   ├── triage_budget_demo.csv
+│   ├── triage_results.csv
+│   ├── policy_eval_results.csv
+│   ├── policy_eval_zero_overlap.csv
+│   ├── agent_runs.jsonl
+│   └── refund_ledger.jsonl
+│
+├── state/
+│   └── Agent checkpoint files
+│
+├── generate_data.py
+├── mock_llm.py
+├── ticket_preprocessing.py
+├── ticket_classifier.py
+├── ticket_budget_routing.py
+├── policy_rag.py
+├── experiment_zero_overlap.py
+├── diagnose_zero_overlap.py
+├── agent_tools.py
+├── test_agent_tools.py
+├── refund_agent.py
+├── inspect_agent_data.py
+├── requirements.txt
+└── README.md
+```
+
+---
 
 ## Reproduce
 
-Follow the steps below to reproduce the implemented project components from a fresh clone.
+### Requirements
 
-### 1. Create a Python virtual environment
+- Python 3.11 or later
+- SQLite 3.25 or later
+- Git
+
+### Installation
+
+**1. Clone the repository**
+
+```bash
+git clone <your-github-repository-url>
+```
+
+**2. Navigate to the project**
+
+```bash
+cd Customer-Intelligence-Support-Copilot
+```
+
+**3. Create a virtual environment**
 
 ```bash
 python -m venv .venv
 ```
 
-### 2. Activate the virtual environment
+**4. Activate the environment**
 
 Windows PowerShell:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
-Linux/macOS:
+**5. Install dependencies**
 
 ```bash
-source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### 3. Install dependencies
+### Offline Execution
+
+Run the project from its root directory. The supplied `mock_llm.py` provides deterministic offline LLM behaviour.
+
+**Part C — Support Ticket Intelligence**
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python ticket_preprocessing.py
+python ticket_classifier.py
+python ticket_budget_routing.py
 ```
 
-### 4. Generate the raw datasets
+**Part D1 — Policy RAG**
 
 ```bash
-python generate_data.py
+python policy_rag.py
 ```
 
-### 5. Audit the raw datasets
+**Part D1 — Zero-Overlap Experiment**
 
 ```bash
-python audit_raw.py
+python experiment_zero_overlap.py
 ```
 
-### 6. Clean the datasets
+**Part D1 — Chunk Boundary Diagnosis**
 
 ```bash
-python clean_data.py
+python diagnose_zero_overlap.py
 ```
 
-### 7. Build the SQLite database
+**Part D2 — Agent Tool Tests**
 
 ```bash
-python build_database.py
+python test_agent_tools.py
 ```
 
-### 8. Execute SQL analysis
+**Part D2 — Refund Agent**
 
 ```bash
-python run_sql.py
+python refund_agent.py
 ```
 
-### 9. Perform pandas analysis
+The refund agent generates:
 
-```bash
-python pandas_analysis.py
-```
+- `outputs/agent_runs.jsonl`
+- `outputs/refund_ledger.jsonl`
+- Checkpoint files under `state/`
 
-### 10. Validate Part A
+The agent execution script also runs the seven scenarios, token-limit demonstration, timeout demonstration, and crash-recovery demonstration.
 
-```bash
-python validate_part_a.py
-```
+---
 
-Expected validation result:
-
-```text
-ALL CHECKPOINTS PASSED
-```
-
-### 11. Perform RFM analysis
-
-```bash
-python rfm_analysis.py
-```
-
-### 12. Perform customer segmentation
-
-```bash
-python customer_segmentation.py
-```
-
-### 13. Train and evaluate lapse prediction models
-
-```bash
-python lapse_prediction.py
-```
-
-## Part A — Data Foundation
+## Part A — Customer Data Foundation
 
 **Status: Completed**
 
-Part A establishes the data foundation for the customer intelligence system.
+### Objectives
 
-### 1. Raw Data Quality Audit
+- Load and inspect customer, order, and product datasets.
+- Clean and preprocess raw datasets.
+- Handle missing values and inconsistent data.
+- Validate data quality and relationships.
+- Store structured data in SQLite.
+- Perform SQL-based customer and business analysis.
+- Use Pandas for further data exploration.
 
-Audited the generated datasets to identify:
+### Key Deliverables
 
-- Duplicate order records.
-- Inconsistent city and gender spellings.
-- Missing and invalid customer ages.
-- Non-numeric and missing order amounts.
-- Negative and missing delivery durations.
-- Pending, completed, and cancelled order statuses.
-- Empty support ticket descriptions.
+- Cleaned customer, order, and product datasets.
+- SQLite database: `data/instamart.db`.
+- Data validation and analysis.
+- SQL and Pandas-based insights.
 
-### 2. Data Cleaning
+---
 
-Applied the following cleaning operations:
-
-- Standardised customer city names and gender values.
-- Handled invalid and missing customer ages using city-wise median imputation.
-- Removed exact duplicate order records.
-- Retained the latest record for each order ID.
-- Converted order amounts into numeric values.
-- Replaced missing order amounts using product price, quantity, and discount.
-- Handled negative and missing delivery durations.
-- Imputed missing delivery times for completed orders using product-category medians.
-- Retained cancelled orders with missing delivery durations.
-
-### 3. SQLite Database
-
-Created the SQLite database with three tables:
-
-- `customers`
-- `products`
-- `orders`
-
-Database location:
-
-`data/instamart.db`
-
-### 4. SQL Analysis
-
-Implemented seven analytical SQL queries covering:
-
-- Customer spending analysis.
-- City-wise and category-wise revenue.
-- Products priced above the average catalogue price.
-- Customers without completed orders.
-- Above-average customer spending.
-- Customer spending rankings using window functions.
-- Daily revenue and cumulative revenue.
-
-### 5. Pandas Analysis
-
-Performed:
-
-- City-wise and category-wise revenue pivot analysis.
-- City-level revenue, average order value, and order count aggregation.
-- Order amount distribution analysis.
-- Outlier detection using the IQR method.
-- Correlation analysis between order amount, discount percentage, and quantity.
-
-### 6. Part A Validation
-
-Validation completed successfully.
-
-- Customer records: 1,200
-- Product records: 40
-- Clean order records: 12,309
-- Completed orders: 11,110
-- Cancelled orders: 1,199
-- Completed order revenue: INR 2,998,668.80
-- Validation checks passed: 24/24
-
-**Final validation output: `ALL CHECKPOINTS PASSED`**
-
-## Part B — Customer Segmentation and Lapse Prediction
+## Part B — Customer Intelligence
 
 **Status: Completed**
 
-Part B uses customer purchasing behaviour to identify customer segments and predict potential customer lapse.
+### Objectives
+
+Develop customer intelligence using transactional data.
 
 ### 1. RFM Analysis
 
-Customer behaviour was analysed using Recency, Frequency, and Monetary (RFM) metrics.
+Customer behaviour is analysed using:
 
-- Snapshot date: 2025-10-01
-- Customers with completed orders: 1,175
-- Average recency: 33.56 days
-- Average frequency: 9.46 orders
-- Average monetary value: INR 2,552.06
+- **Recency:** How recently the customer purchased.
+- **Frequency:** How often the customer purchased.
+- **Monetary:** How much the customer spent.
 
-Generated customer-level RFM features using completed order history.
+RFM analysis was performed using a snapshot date of 2025-10-01.
+
+| Metric | Result |
+|---|---:|
+| Customers with completed orders | 1,175 |
+| Average recency | 33.56 days |
+| Average frequency | 9.46 orders |
+| Average monetary value | INR 2,552.06 |
 
 ### 2. Customer Segmentation
 
-K-Means clustering was evaluated for K values from 2 to 8.
+K-Means clustering was used to group customers based on purchasing behaviour.
 
-The selected configuration was K=4, achieving a silhouette score of 0.526.
+| Metric | Result |
+|---|---:|
+| Number of clusters | 4 |
+| Silhouette score | 0.526 |
+| PCA explained variance | 85.2% |
+
+Customer segments:
 
 | Segment | Customers |
 |---|---:|
@@ -215,95 +242,535 @@ The selected configuration was K=4, achieving a silhouette score of 0.526.
 | Loyal | 419 |
 | At Risk | 182 |
 | Premium | 138 |
-| **Total** | **1,175** |
 
-Principal Component Analysis (PCA) was applied to reduce the RFM feature space to two dimensions.
+### 3. Customer Lapse Prediction
 
-- PC1 explained variance: 63.4%
-- PC2 explained variance: 21.8%
-- Total explained variance: 85.2%
+A customer lapse prediction workflow was developed using Logistic Regression and Random Forest.
 
-### 3. Lapse Prediction
+| Metric | Result |
+|---|---:|
+| Lapse prediction cohort | 1,156 |
+| Lapsed customers | 443 |
+| Active customers | 713 |
+| Training records | 924 |
+| Testing records | 232 |
 
-The prediction cohort included 1,156 customers.
+The training workflow included oversampling to address class imbalance.
 
-- Lapsed customers: 443
-- Active customers: 713
-- Training customers: 924
-- Testing customers: 232
+Model comparison:
 
-The training dataset was balanced using minority-class oversampling.
-
-Two machine learning models were evaluated:
-
-| Model | Test Accuracy | Lapsed-class F1 |
+| Metric | Logistic Regression | Random Forest |
 |---|---:|---:|
-| Logistic Regression | 0.7069 | 0.6909 |
-| Random Forest | 0.6810 | 0.6606 |
+| Accuracy | 70.69% | 68.10% |
+| Lapsed-class F1 score | 0.6909 | 0.6606 |
 
-Random Forest was selected based on its higher cross-validation F1 score of 0.8057, compared with 0.7823 for Logistic Regression.
+Random Forest was selected for the lapse prediction workflow.
 
-The selected model achieved a test F1 score of 0.6606 for the lapsed customer class, exceeding the required threshold of 0.55.
+### Key Deliverables
 
-The selected model was saved using Joblib and successfully reloaded for prediction validation.
+- RFM metrics.
+- Customer segments.
+- Lapse prediction models.
+- Customer intelligence outputs.
 
-### 4. Retention Output
+---
 
-The top 10 Premium customers from the test set were identified using predicted lapse probabilities to support targeted retention campaigns.
+## Part C — Support Ticket Intelligence
 
-**Generated outputs:**
+**Status: Completed**
 
-- `outputs/rfm_features.csv`
-- `outputs/customer_segments.csv`
-- `outputs/lapse_model.joblib`
-- `outputs/retention_list.csv`
-- `outputs/lapse_model_evaluation.csv`
+### Objectives
 
-**Limitation:** The retention list is an illustrative prioritisation output. Premium segment membership is derived from the full-window RFM analysis and is not an input feature in the lapse prediction model.
+Build an automated support-ticket processing and classification pipeline.
 
-## Part C — Support Ticket Triage with Guardrails
+### 1. Ticket Preprocessing
 
-**Status: Pending**
+Implemented in `ticket_preprocessing.py`.
 
-This component will implement support ticket classification and routing with guardrails.
+Key operations:
 
-Planned capabilities:
+- Load support tickets.
+- Clean and normalise ticket text.
+- Detect and redact personally identifiable information (PII).
+- Handle empty tickets.
+- Identify unusually long tickets.
+- Prepare tickets for classification.
 
-- Personally identifiable information (PII) redaction.
-- Zero-shot and few-shot ticket classification.
-- Retry handling for transient model failures.
-- Invalid response handling.
-- Token budget management.
-- Customer-segment-aware ticket routing.
-- Human review for flagged tickets.
+PII categories handled:
 
-## Part D — Policy RAG Assistant and Refund Agent
+- Email addresses.
+- Phone numbers.
+- Order IDs.
 
-**Status: Pending**
+### 2. Ticket Classification
 
-This component will implement a policy-aware retrieval assistant and a guarded refund agent.
+Implemented in `ticket_classifier.py`.
 
-Planned capabilities:
+Two classification approaches were evaluated:
 
-- Policy document chunking and retrieval.
-- TF-IDF-based document retrieval.
-- Policy-grounded question answering.
-- SQLite-based order lookup.
-- Refund eligibility and amount calculation.
-- Automatic and human approval workflows.
-- Tool execution limits and safe fallback handling.
-- Checkpointing and crash-resume functionality.
+- Zero-shot classification.
+- Few-shot classification.
+
+The classifier uses the deterministic mock LLM to generate structured classification responses.
+
+### 3. Budget-Aware Classification and Routing
+
+Implemented in `ticket_budget_routing.py`.
+
+The pipeline includes:
+
+- Token usage tracking.
+- Budget checks.
+- Retry handling for transient failures.
+- Fallback classification.
+- Priority assignment.
+- Department-based ticket routing.
+
+### Evaluation Results
+
+**Dataset:** 164 support tickets.
+
+#### Preprocessing
+
+| Metric | Result |
+|---|---:|
+| Total tickets | 164 |
+| Eligible tickets | 156 |
+| Empty tickets | 4 |
+| Long tickets | 4 |
+| Emails redacted | 55 |
+| Phone numbers redacted | 91 |
+| Order IDs redacted | 132 |
+| Total PII instances redacted | 278 |
+
+No remaining PII was detected in the processed ticket text.
+
+#### Classification Comparison
+
+| Metric | Zero-shot | Few-shot |
+|---|---:|---:|
+| Classified tickets | 147 | 147 |
+| Correct classifications | 126 | 147 |
+| Accuracy | 85.7% | 100% |
+| Tokens used | 12,832 | 21,568 |
+| Average tokens per classified ticket | 87.29 | 146.72 |
+
+#### Additional Results
+
+- 19 transient failures were recovered in each classification run.
+- Final processing statuses:
+
+| Status | Tickets |
+|---|---:|
+| JSON | 135 |
+| Keyword fallback | 12 |
+| Invalid | 9 |
+| Skipped | 4 |
+| Long | 4 |
+
+#### Budget Demonstration
+
+A zero-shot budget demonstration used a token budget of 6,000.
+
+- Tokens consumed: 6,018.
+- Tickets marked as budget exhausted: 83.
+
+The final few-shot run used a budget of 100,000 tokens and consumed 21,568 tokens.
+
+The budget check occurs before an LLM call, so the final reported usage can exceed the configured budget by the tokens consumed by the last permitted call.
+
+#### Final Ticket Routing
+
+| Route | Priority | Tickets |
+|---|---|---:|
+| human_review | NORMAL | 17 |
+| premium_desk | HIGH | 11 |
+| security_team | HIGH | 34 |
+| support_queue | NORMAL | 102 |
+
+### Part C Output Files
+
+- `outputs/tickets_preprocessed.csv`
+- `outputs/triage_zero_shot.csv`
+- `outputs/triage_few_shot.csv`
+- `outputs/triage_budget_demo.csv`
+- `outputs/triage_results.csv`
+
+---
+
+## Part D — Policy RAG and Agent Automation
+
+**Status: Completed**
+
+### Part D1 — Policy Retrieval-Augmented Generation (RAG)
+
+### Objective
+
+Build a policy question-answering system that retrieves relevant information from company policy documents and uses the retrieved content to generate answers.
+
+#### 1. Policy Documents
+
+Five policy documents were used:
+
+| Policy Document | Purpose |
+|---|---|
+| `refund_policy.txt` | Refund eligibility and approval rules |
+| `delivery_policy.txt` | Delivery times, fees, and delivery conditions |
+| `payment_policy.txt` | Payment methods and payment-related issues |
+| `privacy_policy.txt` | Customer data handling and privacy |
+| `escalation_policy.txt` | Escalation rules and support timelines |
+
+#### 2. Text Chunking
+
+Implemented in `policy_rag.py`.
+
+| Parameter | Value |
+|---|---:|
+| Chunk size | 40 words |
+| Chunk overlap | 10 words |
+| Top-K retrieval | 3 |
+| Policy documents | 5 |
+| Total chunks | 15 |
+
+Overlapping chunks help preserve important information when a sentence crosses a chunk boundary.
+
+#### 3. Retrieval Implementation
+
+The retrieval pipeline uses:
+
+- `TfidfVectorizer` for text vectorisation.
+- Cosine similarity for measuring relevance.
+- Top-K retrieval to select the three most relevant chunks.
+- A minimum similarity threshold of 0.05.
+
+For the sample query `refund policy late delivery`, the top three retrieved chunks came from `refund_policy.txt`.
+
+#### 4. Answer Generation
+
+The retrieved policy chunks are passed to the mock LLM using a structured prompt containing:
+
+- Policy context.
+- User question.
+- Policy assistant system instructions.
+
+The assistant generates an answer using the retrieved policy information and provides a fallback response when relevant information cannot be found.
+
+#### 5. Policy RAG Evaluation
+
+Evaluation was performed using `data/raw/policy_eval.csv`.
+
+| Metric | Result |
+|---|---:|
+| Total evaluation questions | 14 |
+| Retrieval accuracy | 12/12 |
+| Factual answer accuracy | 12/12 |
+| Out-of-scope fallback accuracy | 2/2 |
+
+The system successfully retrieved relevant policy information and generated answers matching all expected facts in the in-scope evaluation questions.
+
+#### 6. Chunk Overlap Experiment
+
+Implemented in:
+
+- `experiment_zero_overlap.py`
+- `diagnose_zero_overlap.py`
+
+The same policy documents and evaluation dataset were tested using zero overlap.
+
+**Experimental comparison**
+
+| Metric | 10-word overlap | Zero overlap |
+|---|---:|---:|
+| Chunk size | 40 words | 40 words |
+| Total chunks | 15 | 13 |
+| Retrieval accuracy | 12/12 | 12/12 |
+| Factual answer accuracy | 12/12 | 9/12 |
+| Out-of-scope fallback accuracy | 2/2 | 2/2 |
+
+The zero-overlap experiment produced three factual answer failures.
+
+Investigation identified sentences split across chunk boundaries:
+
+1. Late-delivery refund eligibility:
+   - One chunk ended before the customer refund outcome.
+   - The next chunk contained the remaining sentence.
+
+2. Refund approval above INR 1,000:
+   - One chunk ended with `A refund above INR`.
+   - The next chunk began with `1000 must be approved by a human support lead`.
+
+3. Failed payment reversal:
+   - One chunk ended with `returned automatically`.
+   - The next chunk began with `within 48 hours`.
+
+These breaks affected the information available to the answer-generation step.
+
+**Conclusion**
+
+With 10-word overlap, factual answer accuracy improved from 9/12 (75%) to 12/12 (100%).
+
+This experiment demonstrates the importance of overlapping chunks for preserving context and improving retrieval-based answer generation.
+
+### Part D1 Output Files
+
+- `outputs/policy_eval_results.csv`
+- `outputs/policy_eval_zero_overlap.csv`
+
+---
+
+### Part D2 — ReAct Refund Support Agent
+
+**Status: Completed**
+
+### Objective
+
+Build a tool-using refund support agent using the ReAct (Reasoning and Acting) pattern.
+
+The agent investigates customer refund requests, retrieves order information, searches policy documents, calculates refund eligibility, and either issues a refund or escalates the request.
+
+### 1. Agent Tools
+
+Implemented in `agent_tools.py`.
+
+Five tools are defined through `TOOLS_SPEC` and mapped through `TOOL_MAP`.
+
+| Tool | Responsibility |
+|---|---|
+| `get_order` | Retrieve order information from SQLite |
+| `search_policy` | Search relevant company policy documents |
+| `calculate_refund` | Calculate refund eligibility and amount |
+| `issue_refund` | Process eligible refunds and append to the refund ledger |
+| `escalate_to_human` | Escalate requests requiring human approval |
+
+### 2. Refund Business Rules
+
+- Only completed orders are eligible for late-delivery refunds.
+- Delivery delays greater than 45 minutes qualify for a full refund.
+- Delays of 45 minutes or less do not qualify.
+- Refunds above INR 1,000 require human support lead approval.
+- Refunds within the automatic approval limit can be issued through the refund tool.
+- Refund requests must fall within the seven-day policy window.
+- Cancelled orders are not eligible for a refund under the late-delivery rule.
+
+### 3. ReAct Agent Implementation
+
+Implemented in `refund_agent.py`.
+
+The agent follows a tool-using execution loop:
+
+1. Receive a customer refund request.
+2. Call the mock LLM.
+3. Identify the requested tool and arguments.
+4. Execute the tool using `TOOL_MAP`.
+5. Append the tool observation to the conversation.
+6. Continue until the agent produces a final answer or reaches a safety limit.
+
+The implementation includes:
+
+- Tool calling through `TOOLS_SPEC` and `TOOL_MAP`.
+- ReAct execution loop.
+- Maximum iteration limit.
+- Token usage limit.
+- Execution time limit.
+- Fallback handling.
+- Tool observation tracking.
+- JSONL execution logging.
+- Checkpoint creation after every tool observation.
+- Agent resumption without repeating completed tool actions.
+
+Default execution limits:
+
+| Parameter | Default |
+|---|---:|
+| Maximum iterations | 6 |
+| Token limit | 6,000 |
+| Time limit | 10 seconds |
+
+### 4. Scenario Evaluation
+
+Seven scenarios were executed using `data/raw/agent_scenarios.csv`.
+
+| Scenario | Expected Outcome | Actual Outcome | LLM Calls |
+|---|---|---|---:|
+| S1 | Refund INR 128.25 | REFUND | 5 |
+| S2 | Refund INR 135.00 | REFUND | 5 |
+| S3 | Escalate INR 1,999 | ESCALATE | 5 |
+| S4 | Refund denied | DENIED | 4 |
+| S5 | Refund denied | DENIED | 3 |
+| S6 | Order not found | NOT_FOUND | 2 |
+| S7 | Maximum-iteration fallback | FALLBACK_MAX_ITERATIONS | 6 |
+
+All seven scenarios produced their expected outcomes.
+
+#### Token Usage
+
+| Scenario | Tokens Used |
+|---|---:|
+| S1 | 2,183 |
+| S2 | 2,183 |
+| S3 | 2,170 |
+| S4 | 1,626 |
+| S5 | 1,097 |
+| S6 | 575 |
+| S7 | 4,560 |
+
+### 5. Safety Limit Demonstrations
+
+The agent was tested against its execution limits.
+
+| Test | Configuration | Result |
+|---|---|---|
+| Token limit | `token_limit=200` | FALLBACK_TOKEN_LIMIT |
+| Timeout | `time_limit_seconds=0` | FALLBACK_TIMEOUT |
+| Maximum iterations | `max_iterations=6` | FALLBACK_MAX_ITERATIONS |
+
+**Token limit test**
+
+The agent stopped after one model call because the token budget was exceeded.
+
+- LLM calls: 1
+- Tools executed: 0
+- Status: `FALLBACK_TOKEN_LIMIT`
+
+The requested tool was not executed after the budget check failed.
+
+**Timeout test**
+
+- LLM calls: 0
+- Status: `FALLBACK_TIMEOUT`
+
+**Maximum iteration test**
+
+The loop scenario continued requesting policy searches until the configured iteration limit was reached.
+
+- LLM calls: 6
+- Tokens used: 4,560
+- Status: `FALLBACK_MAX_ITERATIONS`
+
+All three tests stopped safely and returned human-review fallback responses.
+
+### 6. Checkpoint and Crash Recovery
+
+The agent saves its execution state after every tool observation.
+
+Checkpoint information includes:
+
+- Run ID.
+- Scenario ID.
+- Conversation messages.
+- Token usage.
+- Step number.
+- Tools already executed.
+
+The crash-recovery demonstration simulated a crash after the second tool execution.
+
+The agent was then resumed using its saved checkpoint.
+
+**Recovered execution sequence**
+
+```text
+get_order
+    ↓
+search_policy
+    ↓
+calculate_refund
+    ↓
+issue_refund
+```
+
+Final result:
+
+| Metric | Result |
+|---|---|
+| Simulated crash point | After second tool |
+| Resumed status | REFUND |
+| Final refund | INR 128.25 |
+| Total LLM calls | 5 |
+| Repeated completed tool actions | None |
+
+The resumed agent continued from the saved state and did not repeat the completed tool executions.
+
+### 7. ReAct vs Plan-and-Execute
+
+**ReAct** combines reasoning and action in an iterative loop. The agent decides which tool to use based on the current conversation and previous tool observations. This allows it to respond dynamically to retrieved order information and policy results.
+
+**Plan-and-Execute** separates planning from execution. It first creates a sequence of actions and then carries them out. This can be useful for predictable workflows, but the plan may need to be revised when an unexpected result occurs.
+
+For this refund workflow, ReAct provides a straightforward approach because the next action depends on the previous tool result. For example, the agent checks the order before deciding whether to calculate a refund or report that the order cannot be found.
+
+The measured execution examples demonstrate that different scenarios require different numbers of model calls: S1 used five calls, S5 used three, and S6 used two. The loop scenario was safely stopped by the maximum-iteration limit.
+
+### 8. Part D2 Output Files
+
+- `outputs/agent_runs.jsonl` — scenario execution results, tool arguments, observations, and final statuses.
+- `outputs/refund_ledger.jsonl` — refund and escalation records.
+- `state/` — agent checkpoint files.
+
+### 9. Part D2 Test Files
+
+- `agent_tools.py`
+- `test_agent_tools.py`
+- `refund_agent.py`
+
+---
 
 ## Limitations and Next Steps
 
-The current implementation covers the data foundation, customer segmentation, and lapse prediction components.
+### Current Limitations
 
-The following improvements and implementations remain:
+- The mock LLM is deterministic and does not represent the full behaviour of a production language model.
+- TF-IDF retrieval is based on lexical similarity and may not capture semantic relationships as effectively as embedding-based retrieval.
+- The refund workflow operates on a local SQLite database and simulated refund ledger.
+- The project is designed for offline development and evaluation rather than live customer transactions.
+- The evaluation results are based on the supplied datasets and scenarios.
 
-1. Complete Part C support ticket triage and guardrails.
-2. Complete Part D policy RAG assistant and refund agent.
-3. Implement end-to-end validation across all four project parts.
-4. Update the reproduction instructions with the remaining scripts.
-5. Document final evaluation results, limitations, and future improvements.
+### Future Enhancements
 
-The project uses synthetic data and an offline mock LLM environment. Results demonstrate the implemented workflows and should not be interpreted as production performance guarantees.
+Potential improvements include:
+
+- Integrate a hosted LLM with appropriate security controls.
+- Replace TF-IDF with semantic embeddings.
+- Add a persistent vector database.
+- Build a customer support dashboard.
+- Add API endpoints for the copilot.
+- Deploy the application.
+- Add production-grade logging and monitoring.
+- Integrate real payment and order-management systems with appropriate approval safeguards.
+
+### Key Learnings
+
+Through this project, the following concepts were implemented and explored:
+
+- Data cleaning and validation.
+- Relational database design and SQL querying.
+- Customer segmentation using RFM analysis.
+- Customer lapse prediction.
+- PII detection and redaction.
+- Zero-shot and few-shot classification.
+- Token usage and budget management.
+- Retry and fallback mechanisms.
+- TF-IDF text vectorisation.
+- Cosine similarity-based retrieval.
+- Retrieval-Augmented Generation.
+- Chunk size and overlap experimentation.
+- Policy-grounded answer generation.
+- ReAct agents and tool execution.
+- Tool orchestration and execution limits.
+- Checkpointing and crash recovery.
+
+### Project Status
+
+| Component | Status |
+|---|---|
+| Part A — Customer Data Foundation | Completed |
+| Part B — Customer Intelligence | Completed |
+| Part C — Support Ticket Intelligence | Completed |
+| Part D1 — Policy RAG | Completed |
+| Part D1 — Zero-Overlap Experiment | Completed |
+| Part D2 — ReAct Refund Agent | Completed |
+
+### Author
+
+**Customer Intelligence Support Copilot**
+
+An end-to-end learning project exploring customer analytics, machine learning, retrieval-based question answering, and AI-powered support automation.

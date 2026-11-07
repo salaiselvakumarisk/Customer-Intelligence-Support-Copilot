@@ -30,3 +30,8 @@ screenshots/
 *.png
 *.jpg
 *.jpeg
+
+# Runtime agent checkpoints
+state/*.json
+# Runtime agent checkpoints
+state/*.json
