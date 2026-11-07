@@ -98,7 +98,14 @@ Customer-Intelligence-Support-Copilot/
     |-- Runtime agent checkpoints (created during execution)
 ```
 
-`data/` contains the generated raw and cleaned datasets, policy documents, and SQLite database. `sql/` contains the analytical queries. `outputs/` stores generated results, evaluation files, model artifacts, and agent logs. `state/` is used for runtime checkpoints.
+### Directory Overview
+
+| Directory | Description |
+|---|---|
+| `data/` | Contains generated raw and cleaned datasets, policy documents, and the SQLite database. |
+| `sql/` | Contains SQL analytical queries. |
+| `outputs/` | Stores generated results, evaluation files, model artifacts, and agent logs. |
+| `state/` | Stores runtime checkpoints created during agent execution. |
 
 The tree shows the main project files and representative generated outputs; some files are created or refreshed when the workflow runs.
 
@@ -574,23 +581,53 @@ A crash-and-resume test interrupted the agent after its second tool execution. A
 - Add production monitoring, structured observability, and deployment automation.
 - Connect to real systems only after security, privacy, and failure-handling requirements are designed and tested.
 
-## Project status
+## Project Status
 
 | Component | Status |
 |---|---|
 | Part A — Customer Data Foundation | Completed |
 | Part B — Customer Intelligence | Completed |
 | Part C — Support Ticket Intelligence | Completed |
-| Part D — Policy RAG | Completed |
-| Part D — Chunk-overlap experiment | Completed |
-| Part D — ReAct refund agent | Completed |
+| Part D — Policy RAG and Agent Automation | Completed |
+| ↳ Policy RAG | Completed |
+| ↳ Chunk-overlap experiment | Completed |
+| ↳ ReAct refund agent | Completed |
 
-## Concepts applied
+## Concepts Applied
 
-Data quality and cleaning · Relational data and SQL · Window functions · Pandas analysis · RFM analysis · K-Means and PCA · Classification · Train/test separation · Preprocessing pipelines · Cross-validation · Class imbalance · Model evaluation · PII redaction · Zero-shot and few-shot classification · Token budgeting · Retry and fallback handling · TF-IDF · Cosine similarity · Retrieval-augmented generation · Chunk-overlap evaluation · Tool-using agents · Execution guardrails · Checkpointing and recovery
+**Data Engineering and Analysis**
+- Data quality and cleaning
+- Relational data and SQL
+- Window functions
+- Pandas analysis
+
+**Customer Intelligence and Machine Learning**
+- RFM analysis
+- K-Means clustering and PCA
+- Classification
+- Train/test separation
+- Preprocessing pipelines
+- Cross-validation
+- Class imbalance
+- Model evaluation
+
+**Support Ticket Intelligence**
+- PII redaction
+- Zero-shot and few-shot classification
+- Token budgeting
+- Retry and fallback handling
+
+**Retrieval-Augmented Generation**
+- TF-IDF
+- Cosine similarity
+- Retrieval-augmented generation (RAG)
+- Chunk-overlap evaluation
+
+**Agent Automation and Reliability**
+- Tool-using agents
+- Execution guardrails
+- Checkpointing and recovery
 
 ## Author
 
-**Customer Intelligence Support Copilot**
-
-GitHub repository: [Customer-Intelligence-Support-Copilot](https://github.com/salaiselvakumarisk/Customer-Intelligence-Support-Copilot)
+[Salai Selvakumari](https://github.com/salaiselvakumarisk)
