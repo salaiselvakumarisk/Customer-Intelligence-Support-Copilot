@@ -33,5 +33,6 @@ screenshots/
 
 # Runtime agent checkpoints
 state/*.json
-# Runtime agent checkpoints
-state/*.json
+
+# Local VS Code workspace
+*.code-workspace
